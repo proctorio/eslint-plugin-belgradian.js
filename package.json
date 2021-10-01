@@ -1,0 +1,21 @@
+{
+  "name": "eslint-plugin-belgradian",
+  "version": "2.0.0",
+  "description": "Eslint plugin for extending the camel case rule by allowing hungarian style variable names",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:proctorio/eslint-plugin-belgradian.js.git"
+  },
+  "scripts": {
+    "build-windows": "xcopy src lib /E /I /Y",
+    "build-linux": "cp -R src lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Proctorio",
+  "license": "MIT",
+  "dependencies": {
+    "camelcase": "^6.2.0",
+    "lodash.get": "^4.4.2"
+  }
+}

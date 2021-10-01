@@ -1,20 +1,57 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# eslint-plugin-belgradian
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+The plugin is supposed to help
+write elements in cascalCase and prefix them with a scope:
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+- `m_` for field members
+- `g_` for global variables (outside of the Module or Class)
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## Installation
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+You'll first need to install [ESLint](http://eslint.org):
+
+```
+$ npm i eslint --save-dev
+```
+
+Next, install `eslint-plugin-belgradian`:
+
+```
+$ npm install eslint-plugin-belgradian --save-dev
+```
+
+## Basic usage
+
+Add `belgradian` to the plugins section of your `.eslintrc` configuration file. 
+You can omit the `eslint-plugin-` prefix:
+
+```json
+{
+  "plugins": ["belgradian"]
+}
+```
+
+Then configure the rules you want to use under the rules section:
+
+```json
+{
+  "rules": {
+    "belgradian/member-prefix-rule": "error"
+  }
+}
+```
+
+Or:
+
+```json
+{
+  "rules": {
+    "belgradian/member-prefix-rule": [
+		2, 
+		{ "include": ["g_"], "exceptions": ["reservedVariable"] }
+	]
+  }
+}
+```
+
+Inspired by Sander Verweij's [budapestian](https://github.com/sverweij/eslint-plugin-budapestian).
