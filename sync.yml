@@ -1,0 +1,18 @@
+trigger:
+  branches:
+    include:
+    - main
+
+resources:
+  repositories:
+    - repository: templates
+      type: git
+      name: Plumbing/core-templates
+    - repository: eslint-plugin-belgradian.js
+      type: git
+      name: Open/eslint-plugin-belgradian.js
+
+stages:
+- template: stages/sync/azure-sync.yml@templates  # Template reference
+  parameters:
+    checkout: eslint-plugin-belgradian.js
