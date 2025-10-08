@@ -1,21 +1,46 @@
 {
   "name": "eslint-plugin-belgradian",
-  "version": "2.0.0",
-  "description": "Eslint plugin for extending the camel case rule by allowing hungarian style variable names",
-  "main": "lib/index.js",
+  "version": "3.0.0",
+  "description": "ESLint plugin for enforcing Hungarian notation with camelCase variable naming conventions",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "hungarian-notation",
+    "naming-convention",
+    "camelcase",
+    "code-style"
+  ],
+  "author": "Proctorio <hello@proctorio.com> (https://proctorio.com)",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/proctorio/eslint-plugin-belgradian.js#readme",
   "repository": {
     "type": "git",
-    "url": "git@github.com:proctorio/eslint-plugin-belgradian.js.git"
+    "url": "git+https://github.com/proctorio/eslint-plugin-belgradian.js.git"
   },
+  "bugs": {
+    "url": "https://github.com/proctorio/eslint-plugin-belgradian.js/issues"
+  },
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "build-windows": "xcopy src lib /E /I /Y",
-    "build-linux": "cp -R src lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node -e \"require('fs').cpSync('src', 'lib', {recursive: true})\"",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
-  "author": "Proctorio",
-  "license": "MIT",
-  "dependencies": {
-    "camelcase": "^6.2.0",
-    "lodash.get": "^4.4.2"
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=7.0.0"
+  },
+  "devDependencies": {
+    "eslint": "8.57.0",
+    "jest": "29.7.0",
+    "jest-junit": "16.0.0"
   }
 }
