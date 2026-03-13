@@ -10,7 +10,12 @@ function _toCamelCase(string)
 
 function getVariableDeclaratorName(declarator)
 {
-	return declarator?.id?.name ?? "OK_ANYWAY";
+	if (declarator && declarator.id && declarator.id.name)
+	{
+		return declarator.id.name;
+	}
+
+	return "OK_ANYWAY";
 }
 
 function isNotAValidConstant()
@@ -111,7 +116,7 @@ function reportProblemIdentifiers(node, context, pProblemVariables, prefix)
 				node,
 				message: `{{ variableType }} '{{ identifier }}' should be camel case and start with a '{{ prefix }}': '{{ betterIdentifier }}'`,
 				data: {
-							variableType: NODE_TYPE2IDENTIFIER_TYPE[node.type] ?? "local variable",
+							variableType: NODE_TYPE2IDENTIFIER_TYPE[node.type] || "local variable",
 					identifier: problemVariableName,
 					betterIdentifier: _normalizePrefixedIdentifier(
 						problemVariableName,
