@@ -1,57 +1,75 @@
 # eslint-plugin-belgradian
 
-The plugin is supposed to help
-write elements in cascalCase and prefix them with a scope:
+An ESLint plugin that enforces camelCase variable naming with scope prefixes:
 
 - `m_` for field members
-- `g_` for global variables (outside of the Module or Class)
+- `g_` for global variables (outside of the module or class)
 
 ## Installation
 
-You'll first need to install [ESLint](http://eslint.org):
-
 ```
-$ npm i eslint --save-dev
+npm install eslint eslint-plugin-belgradian --save-dev
 ```
 
-Next, install `eslint-plugin-belgradian`:
+## Usage
 
+### ESLint flat config (eslint.config.js — ESLint 9+)
+
+```js
+import belgradian from "eslint-plugin-belgradian";
+
+export default [
+  {
+    plugins: { belgradian },
+    rules: {
+      "belgradian/member-prefix-rule": "error"
+    }
+  }
+];
 ```
-$ npm install eslint-plugin-belgradian --save-dev
-```
 
-## Basic usage
+### Legacy config (.eslintrc — ESLint 8 and below)
 
-Add `belgradian` to the plugins section of your `.eslintrc` configuration file. 
-You can omit the `eslint-plugin-` prefix:
+Add `belgradian` to the plugins section of your `.eslintrc` configuration file:
 
 ```json
 {
-  "plugins": ["belgradian"]
-}
-```
-
-Then configure the rules you want to use under the rules section:
-
-```json
-{
+  "plugins": ["belgradian"],
   "rules": {
     "belgradian/member-prefix-rule": "error"
   }
 }
 ```
 
-Or:
+## Options
+
+The rule accepts an options object with:
+
+- **`include`** — additional prefixes to allow (e.g. `["g_"]`)
+- **`exceptions`** — variable names to ignore
 
 ```json
 {
   "rules": {
     "belgradian/member-prefix-rule": [
-		2, 
-		{ "include": ["g_"], "exceptions": ["reservedVariable"] }
-	]
+      "error",
+      { "include": ["g_"], "exceptions": ["reservedVariable"] }
+    ]
   }
 }
 ```
+
+## Development
+
+```bash
+npm test        # run tests with coverage
+npm run lint    # lint source and test files
+```
+
+## License
+
+[MIT](LICENCE)
+
+---
 
 Inspired by Sander Verweij's [budapestian](https://github.com/sverweij/eslint-plugin-budapestian).
