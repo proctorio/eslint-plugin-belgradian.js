@@ -1,4 +1,4 @@
-const { getVariableDeclaratorName, isNotAnException, isVariableDeclaration, isProblemVariableDeclarator, isNotAValidConstant } = require("../src/rules/utils");
+const { getVariableDeclaratorName, isNotAnException, isVariableDeclaration, isProblemVariableDeclarator, isNotAValidConstant, reportProblemIdentifiers, _toCamelCase } = require("../src/rules/utils");
 
 describe("utils", () =>
 {
@@ -116,6 +116,96 @@ describe("utils", () =>
 			const checker = isProblemVariableDeclarator(["m_"]);
 			const declarator = { id: { name: "badName" }, init: { type: "ArrowFunctionExpression" } };
 			expect(checker(declarator)).to.equal(false);
+		});
+	});
+
+	describe("_toCamelCase", () =>
+	{
+		it("should convert snake_case to camelCase", () =>
+		{
+			expect(_toCamelCase("my_variable_name")).to.equal("myVariableName");
+		});
+
+		it("should convert kebab-case to camelCase", () =>
+		{
+			expect(_toCamelCase("my-variable-name")).to.equal("myVariableName");
+		});
+
+		it("should convert space-separated to camelCase", () =>
+		{
+			expect(_toCamelCase("my variable name")).to.equal("myVariableName");
+		});
+
+		it("should lowercase a leading uppercase letter", () =>
+		{
+			expect(_toCamelCase("MyVariable")).to.equal("myVariable");
+		});
+
+		it("should return an already camelCase string unchanged", () =>
+		{
+			expect(_toCamelCase("alreadyCamel")).to.equal("alreadyCamel");
+		});
+
+		it("should handle single word", () =>
+		{
+			expect(_toCamelCase("word")).to.equal("word");
+		});
+
+		it("should handle trailing separator", () =>
+		{
+			expect(_toCamelCase("trailing_")).to.equal("trailing");
+		});
+	});
+
+	describe("reportProblemIdentifiers", () =>
+	{
+		it("should use node type from NODE_TYPE2IDENTIFIER_TYPE when available", () =>
+		{
+			const reportFn = vi.fn();
+			const context = { report: reportFn };
+			const node = { type: "Program" };
+
+			reportProblemIdentifiers(node, context, ["badVar"], ["m_"]);
+
+			expect(reportFn).toHaveBeenCalledOnce();
+			const reportData = reportFn.mock.calls[0][0].data;
+			expect(reportData.variableType).to.equal("member variable");
+		});
+
+		it("should fall back to 'local variable' for unknown node types", () =>
+		{
+			const reportFn = vi.fn();
+			const context = { report: reportFn };
+			const node = { type: "UnknownType" };
+
+			reportProblemIdentifiers(node, context, ["badVar"], ["m_"]);
+
+			const reportData = reportFn.mock.calls[0][0].data;
+			expect(reportData.variableType).to.equal("local variable");
+		});
+
+		it("should suggest a camelCase prefixed identifier", () =>
+		{
+			const reportFn = vi.fn();
+			const context = { report: reportFn };
+			const node = { type: "Program" };
+
+			reportProblemIdentifiers(node, context, ["bad_name"], ["m_"]);
+
+			const reportData = reportFn.mock.calls[0][0].data;
+			expect(reportData.betterIdentifier).to.equal("m_badName");
+		});
+
+		it("should preserve prefix for already-prefixed identifiers", () =>
+		{
+			const reportFn = vi.fn();
+			const context = { report: reportFn };
+			const node = { type: "Program" };
+
+			reportProblemIdentifiers(node, context, ["g_someVar"], ["m_"]);
+
+			const reportData = reportFn.mock.calls[0][0].data;
+			expect(reportData.betterIdentifier).to.equal("m_someVar");
 		});
 	});
 });

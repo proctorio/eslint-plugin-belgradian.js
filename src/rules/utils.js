@@ -1,11 +1,16 @@
-const _get = require("lodash.get");
-const camelcase = require("camelcase");
-const NODE_TYPE2IDENTIFIER_TYPE = require("../constants/types");
-const { VALID_MEMBER_PATTERN_PART, VALID_GLOBAL_CONSTANT_PATTERN } = require("../constants/pattern")
+const { NODE_TYPE2IDENTIFIER_TYPE } = require("../constants/types");
+const { VALID_MEMBER_PATTERN_PART, VALID_GLOBAL_CONSTANT_PATTERN } = require("../constants/pattern");
+
+function _toCamelCase(string)
+{
+	return string
+		.replace(/[-_\s]+(.)?/g, (_, ch) => ch ? ch.toUpperCase() : "")
+		.replace(/^[A-Z]/, (ch) => ch.toLowerCase());
+}
 
 function getVariableDeclaratorName(declarator)
 {
-	return _get(declarator, "id.name", "OK_ANYWAY");
+	return declarator?.id?.name ?? "OK_ANYWAY";
 }
 
 function isNotAValidConstant()
@@ -69,7 +74,7 @@ function isVariableDeclaration(node)
 
 function _prefixCamelCaseIdentifier(pIdentifier, pPrefix)
 {
-	return `${pPrefix}${camelcase(pIdentifier)}`;
+	return `${pPrefix}${_toCamelCase(pIdentifier)}`;
 }
 
 function _isOneOfValidPrefixedIdentifiers(string, prefixes)
@@ -106,11 +111,7 @@ function reportProblemIdentifiers(node, context, pProblemVariables, prefix)
 				node,
 				message: `{{ variableType }} '{{ identifier }}' should be camel case and start with a '{{ prefix }}': '{{ betterIdentifier }}'`,
 				data: {
-					variableType: _get(
-						NODE_TYPE2IDENTIFIER_TYPE,
-						node.type,
-						"local variable"
-					),
+							variableType: NODE_TYPE2IDENTIFIER_TYPE[node.type] ?? "local variable",
 					identifier: problemVariableName,
 					betterIdentifier: _normalizePrefixedIdentifier(
 						problemVariableName,
@@ -129,5 +130,6 @@ module.exports = {
 	isVariableDeclaration,
 	isProblemVariableDeclarator,
 	isNotAValidConstant,
-	reportProblemIdentifiers
+	reportProblemIdentifiers,
+	_toCamelCase
 }
