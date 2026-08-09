@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:proctorio/eslint-plugin-belgradian.js.git"
+    "url": "git+https://github.com/proctorio/eslint-plugin-belgradian.js.git"
   },
   "scripts": {
     "build-windows": "xcopy src lib /E /I /Y",
