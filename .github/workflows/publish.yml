@@ -1,7 +1,8 @@
 name: publish
 
-# Canonical source of this workflow is the ADO Open repo; sync mirrors it to GitHub.
-# Publishes to npmjs via OIDC trusted publishing (no tokens). Version comes from the release tag.
+# The internal pipeline cuts release/x.y.z tags and the repository mirror pushes them here.
+# This workflow publishes to npmjs via OIDC trusted publishing (no tokens) and cuts the GitHub
+# release. package.json on main is never version-bumped - the version comes from the tag name.
 
 on:
   push:
@@ -24,10 +25,10 @@ jobs:
       # trusted publishing needs a current npm cli
       - run: npm install -g npm@latest
       - name: Set version from the release tag
-        run: npm version "${GITHUB_REF_NAME#release/}" --no-git-tag-version --allow-same-version
+        run: npm version "${GITHUB_REF_NAME#release/}" --no-git-tag-version
       - run: npm install
-      - run: npm run build-linux
       - run: npm test
+      - run: npm run build
       - run: npm publish --access public
       - name: GitHub release
         env:
