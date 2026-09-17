@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-belgradian",
-  "version": "2.1.0",
+  "version": "2.4.3",
   "description": "Eslint plugin for extending the camel case rule by allowing hungarian style variable names",
   "main": "lib/index.js",
   "repository": {
